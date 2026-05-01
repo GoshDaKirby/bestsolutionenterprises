@@ -221,10 +221,12 @@ img { max-width: 100%; display: block; }
 .hero.hero-inner {
   background-image: url('../images/bg.png');
   background-position: center center;
-  margin-top: 64px;        /* clear the fixed navbar */
-  min-height: 0 !important;
-  padding-top: 52px;
+  /* No margin — padding pushes content below the fixed navbar
+     without leaving a gap that exposes the body background */
+  margin-top: 0;
+  padding-top: 116px;    /* 64px navbar + 52px breathing room */
   padding-bottom: 52px;
+  min-height: 0 !important;
 }
 .hero-eyebrow {
   font-family: var(--font-heading);

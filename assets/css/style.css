@@ -213,58 +213,18 @@ img { max-width: 100%; display: block; }
   z-index: 1;
 }
 
-/* ── PAGE BANNER (inner pages) ──────────────────────────── */
-/*
-  A slim full-width strip showing the top crop of bg.png,
-  pinned right below the fixed 64px navbar.
-  The banner itself is NOT a section — it has no text,
-  just the cropped image with a gradient fade at the bottom.
-*/
-.page-banner {
-  position: relative;
-  margin-top: 64px;       /* clear the fixed navbar */
-  width: 100%;
-  height: 220px;
-  overflow: hidden;
-  background-color: var(--navy);
-  background-image: url('../images/bg.png');
-  background-size: cover;
-  background-position: center center;  /* show the middle of the image */
-  background-repeat: no-repeat;
-  flex-shrink: 0;
-}
-/* Overlay: darkens the strip to match the navy nav above
-   and fades to the page background below */
-.page-banner::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(15,31,56,0.55) 0%,
-    rgba(15,31,56,0.30) 40%,
-    rgba(245,246,248,0.85) 100%
-  );
-  pointer-events: none;
-}
-
 @media (max-width: 900px) {
-  .page-banner { height: 150px; }
   .hero { background-position: center center; }
 }
 
-/* ── INNER PAGE HERO (uses bg.png, sits below page-banner) ── */
-/*
-  Inner page heroes don't need margin-top (page-banner handles
-  the navbar gap). Reduce top padding since banner already
-  provides visual separation above the hero content.
-*/
+/* ── INNER PAGE HERO ─────────────────────────────────────── */
 .hero.hero-inner {
   background-image: url('../images/bg.png');
   background-position: center center;
-  margin-top: 0;          /* page-banner already clears the navbar */
-  padding-top: 72px;      /* tighter — banner provides the visual gap */
-  padding-bottom: 64px;
+  margin-top: 64px;        /* clear the fixed navbar */
+  min-height: 0 !important;
+  padding-top: 52px;
+  padding-bottom: 52px;
 }
 .hero-eyebrow {
   font-family: var(--font-heading);

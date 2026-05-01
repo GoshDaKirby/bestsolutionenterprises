@@ -161,7 +161,7 @@ img { max-width: 100%; display: block; }
 }
 .nav-drawer a:hover, .nav-drawer a.active { color: #a8c8f0; }
 
-/* ── HERO (home page) ────────────────────────────────────── */
+/* ── HERO — HOME PAGE (bg.gif, full 100vh) ───────────────── */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -170,28 +170,43 @@ img { max-width: 100%; display: block; }
   padding: 120px 80px 80px;
   position: relative;
   overflow: hidden;
-  /* bg.gif sits behind a dark overlay so text stays readable */
-  background-color: var(--navy);
+  background-color: var(--navy);         /* fallback while gif loads    */
   background-image: url('../images/bg.gif');
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
+  background-attachment: scroll;
 }
-/* Dark overlay — dims the gif so the content pops */
-.hero::after {
+
+/*
+ * TWO-LAYER overlay on the home hero:
+ *   ::before  — diagonal dark-blue tint (medium: image still visible)
+ *   ::after   — bottom vignette so the hero bleeds cleanly into the next section
+ */
+.hero::before {
   content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(
     135deg,
-    rgba(15,31,56,0.82) 0%,
-    rgba(15,31,56,0.60) 50%,
-    rgba(15,31,56,0.72) 100%
+    rgba(15, 31, 56, 0.75) 0%,     /* left-top: heavier — text lives here */
+    rgba(15, 31, 56, 0.48) 55%,     /* center: image shows through          */
+    rgba(15, 31, 56, 0.62) 100%     /* right-bottom: softened               */
   );
   pointer-events: none;
   z-index: 0;
 }
-/* Keep all hero children above the overlay */
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 140px;
+  background: linear-gradient(to bottom, transparent 0%, var(--navy) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* All hero children sit above both overlays */
 .hero > * { position: relative; z-index: 1; }
 
 .hero-bg-grid {
@@ -217,16 +232,46 @@ img { max-width: 100%; display: block; }
   .hero { background-position: center center; }
 }
 
-/* ── INNER PAGE HERO ─────────────────────────────────────── */
+/* ── INNER PAGE HERO (bg.png, fades out downward) ────────── */
+/*
+ * bg.png covers the top hero banner on every inner page.
+ * The image fades out toward the bottom via a ::before pseudo-element
+ * that layers: medium tint on top, then a hard fade to --bg at the bottom.
+ * This makes the hero dissolve naturally into the first content section.
+ */
 .hero.hero-inner {
-  background-image: url('../images/bg.png');
-  background-position: center center;
-  /* No margin — padding pushes content below the fixed navbar
-     without leaving a gap that exposes the body background */
-  margin-top: 0;
-  padding-top: 116px;    /* 64px navbar + 52px breathing room */
-  padding-bottom: 52px;
   min-height: 0 !important;
+  padding-top: 116px;   /* 64px fixed navbar + 52px breathing room */
+  padding-bottom: 0;    /* fade handles the bottom, no padding needed */
+  overflow: visible;    /* let the fade element bleed down if needed  */
+  background-image: url('../images/bg.png');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+}
+
+/* Tint + downward fade combined in one gradient */
+.hero.hero-inner::before {
+  background:
+    /* Medium tint across the whole area */
+    linear-gradient(
+      to bottom,
+      rgba(15, 31, 56, 0.68) 0%,
+      rgba(15, 31, 56, 0.68) 55%,
+      rgba(15, 31, 56, 0.85) 80%,
+      var(--bg) 100%            /* dissolves into the light body bg     */
+    );
+}
+
+/* Inner hero has no bottom vignette — the ::before handles it */
+.hero.hero-inner::after {
+  display: none;
+}
+
+/* Extra bottom padding so the fade has room to breathe */
+.hero.hero-inner > *:last-child {
+  padding-bottom: 52px;
 }
 .hero-eyebrow {
   font-family: var(--font-heading);
